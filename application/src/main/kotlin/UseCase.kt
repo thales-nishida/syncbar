@@ -1,10 +1,10 @@
 package br.com.thalesnishida.syncbar.application
 
-import br.com.thalesnishida.syncbar.domain.Barber
+import user.User
 
 class UseCase {
 
-    fun execute() : Barber {
-        return Barber()
+    fun execute(): User {
+        return User.newUser("John Doe", "john.doe@example.com", "password123", "ADMIN")
     }
 }
