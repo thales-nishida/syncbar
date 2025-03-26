@@ -189,8 +189,64 @@ class UserTest {
         val exceptionErrorCount = 1
         val exceptionErrorMessage = "'typeUser' format is not valid"
         val expectEmail = "teste@test.com"
-        val expectPassword = "test"
+        val expectPassword = "test@"
         val expectTypeUser = "ADMINsss"
+
+        val actualUser = User.newUser(expectName, expectEmail, expectPassword, expectTypeUser)
+
+        val actualException =
+            Assertions.assertThrows(DomainException::class.java) { actualUser.validate(ThrowsValidationHandler()) }
+        Assertions.assertEquals(exceptionErrorMessage, actualException.getErrors()[0].message)
+        Assertions.assertEquals(exceptionErrorCount, actualException.getErrors().size)
+    }
+
+    @Test
+    fun givenAnInvalidPasswordWithoutSpecialCharacter_whenCallUserAndValidated_thenShouldReturnError() {
+        val expectName = "Test"
+        val exceptionErrorCount = 1
+        val exceptionErrorMessage = "'password' format is not valid"
+        val expectEmail = "teste@test.com"
+        val expectTypeUser = "ADMIN"
+        val expectPassword = "test"
+
+        val actualUser = User.newUser(expectName, expectEmail, expectPassword, expectTypeUser)
+
+        val actualException =
+            Assertions.assertThrows(DomainException::class.java) { actualUser.validate(ThrowsValidationHandler()) }
+        Assertions.assertEquals(exceptionErrorMessage, actualException.getErrors()[0].message)
+        Assertions.assertEquals(exceptionErrorCount, actualException.getErrors().size)
+    }
+
+    @Test
+    fun givenAnInvalidPasswordLengthLess8_whenCallUserAndValidated_thenShouldReturnError() {
+        val expectName = "Test"
+        val exceptionErrorCount = 1
+        val exceptionErrorMessage = "'password' must between 8 characters and 255 characters"
+        val expectEmail = "teste@test.com"
+        val expectTypeUser = "ADMIN"
+        val expectPassword = "tes!"
+
+        val actualUser = User.newUser(expectName, expectEmail, expectPassword, expectTypeUser)
+
+        val actualException =
+            Assertions.assertThrows(DomainException::class.java) { actualUser.validate(ThrowsValidationHandler()) }
+        Assertions.assertEquals(exceptionErrorMessage, actualException.getErrors()[0].message)
+        Assertions.assertEquals(exceptionErrorCount, actualException.getErrors().size)
+    }
+
+    @Test
+    fun givenAnInvalidPasswordLengthMore255_whenCallUserAndValidated_thenShouldReturnError() {
+        val expectName = "Test"
+        val exceptionErrorCount = 1
+        val exceptionErrorMessage = "'password' must between 8 characters and 255 characters"
+        val expectEmail = "teste@test.com"
+        val expectTypeUser = "ADMIN"
+        val expectPassword = """
+             Caros amigos, a @mobilidade dos capitais internacionais nos obriga 
+             à análise do retorno esperado a longo prazo. 2222213
+             Todas estas questões, devidamente ponderadas, levantam dúvidas sobre se a 
+             necessidade de renovação processual cumpre um papel essencial na sadadf.
+        """.trimIndent()
 
         val actualUser = User.newUser(expectName, expectEmail, expectPassword, expectTypeUser)
 

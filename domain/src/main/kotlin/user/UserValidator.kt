@@ -13,6 +13,7 @@ class UserValidator(private val user: User, aHandler: ValidationHandler) : Valid
         checkConstrainsName()
         checkConstrainsEmail()
         checkConstrainsTypeUser()
+        checkConstrainsPassword()
     }
 
     private fun checkConstrainsName() {
@@ -50,8 +51,18 @@ class UserValidator(private val user: User, aHandler: ValidationHandler) : Valid
         if (typeUser!!.isEmpty() || typeUser.isBlank()) {
             this.validationHandler().append(Error("'typeUser' should not be empty"))
         }
-        if(typeUser.contains("ADMIN") ) {
+        if(typeUser != "ADMIN") {
             this.validationHandler().append(Error("'typeUser' format is not valid"))
+        }
+    }
+
+    private fun checkConstrainsPassword() {
+        val password = this.user.aPassword
+        if(!password!!.contains("@") && !password.contains("!") && !password.contains("#")) {
+            this.validationHandler().append(Error("'password' format is not valid"))
+        }
+        if(password.length <= 8 || password.trim().length > 255) {
+            this.validationHandler().append(Error("'password' must between 8 characters and 255 characters"))
         }
     }
 }
