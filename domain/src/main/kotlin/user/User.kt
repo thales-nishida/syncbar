@@ -5,7 +5,7 @@ import validation.ValidationHandler
 
 open class User private constructor(
     val anId: UserID,
-    val aName: String?,
+    var aName: String?,
     val aEmail: String?,
     val aPassword: String?,
     val aTypeUser: String?,
@@ -21,4 +21,8 @@ open class User private constructor(
         UserValidator(this, handler).validate()
     }
 
+    fun getUpdateName(name: String): User {
+        this.aName = name
+        return this
+    }
 }

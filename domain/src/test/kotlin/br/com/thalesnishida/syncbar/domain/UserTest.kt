@@ -190,7 +190,7 @@ class UserTest {
         val exceptionErrorMessage = "'typeUser' format is not valid"
         val expectEmail = "teste@test.com"
         val expectPassword = "test@"
-        val expectTypeUser = "ADMINsss"
+        val expectTypeUser = "CLIENTasda"
 
         val actualUser = User.newUser(expectName, expectEmail, expectPassword, expectTypeUser)
 
@@ -254,5 +254,28 @@ class UserTest {
             Assertions.assertThrows(DomainException::class.java) { actualUser.validate(ThrowsValidationHandler()) }
         Assertions.assertEquals(exceptionErrorMessage, actualException.getErrors()[0].message)
         Assertions.assertEquals(exceptionErrorCount, actualException.getErrors().size)
+    }
+
+    @Test
+    fun givenAValidParamName_whenCallUserUpdate_thenShouldReturnUserUpdate() {
+        val expectName = "Test Name"
+        val expectEmail = "test@test.com"
+        val expectPassword = "testsdsad@"
+        val expectTypeUser = "ADMIN"
+
+        val actualUser = User.newUser(expectName, expectEmail, expectPassword, expectTypeUser)
+
+        Assertions.assertDoesNotThrow() { actualUser.validate(ThrowsValidationHandler()) }
+
+        val nameToUpdate = "Test Name Update"
+
+        val updateName : User = actualUser.getUpdateName(nameToUpdate)
+
+        Assertions.assertEquals(actualUser.anId, updateName.anId)
+        Assertions.assertEquals(nameToUpdate, updateName.aName)
+        Assertions.assertEquals(expectEmail, updateName.aEmail)
+        Assertions.assertEquals(expectPassword, updateName.aPassword)
+        Assertions.assertEquals(expectTypeUser, updateName.aTypeUser)
+
     }
 }

@@ -5,7 +5,12 @@ import validation.ValidationHandler
 import validation.Validator
 
 private const val NAME_MIN_LENGTH = 3
+private const val MIN_LENGTH_PASSWORD = 8
 private const val NAME_MAX_LENGTH = 255
+private const val ADMIN = "ADMIN"
+private const val EMPLOYEE = "EMPLOYEE"
+private const val CLIENT = "CLIENT"
+
 
 class UserValidator(private val user: User, aHandler: ValidationHandler) : Validator(aHandler) {
 
@@ -51,7 +56,7 @@ class UserValidator(private val user: User, aHandler: ValidationHandler) : Valid
         if (typeUser!!.isEmpty() || typeUser.isBlank()) {
             this.validationHandler().append(Error("'typeUser' should not be empty"))
         }
-        if(typeUser != "ADMIN") {
+        if(typeUser != ADMIN && typeUser != EMPLOYEE && typeUser != CLIENT) {
             this.validationHandler().append(Error("'typeUser' format is not valid"))
         }
     }
@@ -61,7 +66,7 @@ class UserValidator(private val user: User, aHandler: ValidationHandler) : Valid
         if(!password!!.contains("@") && !password.contains("!") && !password.contains("#")) {
             this.validationHandler().append(Error("'password' format is not valid"))
         }
-        if(password.length <= 8 || password.trim().length > 255) {
+        if(password.length <= MIN_LENGTH_PASSWORD || password.trim().length > NAME_MAX_LENGTH) {
             this.validationHandler().append(Error("'password' must between 8 characters and 255 characters"))
         }
     }
