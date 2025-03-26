@@ -36,7 +36,7 @@ class UserValidator(private val user: User, aHandler: ValidationHandler) : Valid
 
     private fun checkConstrainsEmail() {
         val email = this.user.aEmail
-        val emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$".toRegex()
+        val emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,3}(\\.br)?$".toRegex()
         if(email == null) {
             this.validationHandler().append(Error("'email' should not be null"))
         }

@@ -257,7 +257,7 @@ class UserTest {
     }
 
     @Test
-    fun givenAValidParamName_whenCallUserUpdate_thenShouldReturnUserUpdate() {
+    fun givenAValidParams_whenCallUpdate_thenShouldReturnUserUpdate() {
         val expectName = "Test Name"
         val expectEmail = "test@test.com"
         val expectPassword = "testsdsad@"
@@ -268,14 +268,19 @@ class UserTest {
         Assertions.assertDoesNotThrow() { actualUser.validate(ThrowsValidationHandler()) }
 
         val nameToUpdate = "Test Name Update"
+        val emailToUpdate = "test@test.com.br"
+        val passwordToUpdate = "testsdsad@"
+        val typeUserToUpdate = "ADMIN"
 
-        val updateName : User = actualUser.getUpdateName(nameToUpdate)
+        val updateUser : User = actualUser.getUpdateName(nameToUpdate, emailToUpdate, passwordToUpdate,typeUserToUpdate)
 
-        Assertions.assertEquals(actualUser.anId, updateName.anId)
-        Assertions.assertEquals(nameToUpdate, updateName.aName)
-        Assertions.assertEquals(expectEmail, updateName.aEmail)
-        Assertions.assertEquals(expectPassword, updateName.aPassword)
-        Assertions.assertEquals(expectTypeUser, updateName.aTypeUser)
+        Assertions.assertDoesNotThrow() { updateUser.validate(ThrowsValidationHandler()) }
+
+        Assertions.assertEquals(actualUser.anId, updateUser.anId)
+        Assertions.assertEquals(nameToUpdate, updateUser.aName)
+        Assertions.assertEquals(emailToUpdate, updateUser.aEmail)
+        Assertions.assertEquals(passwordToUpdate, updateUser.aPassword)
+        Assertions.assertEquals(typeUserToUpdate, updateUser.aTypeUser)
 
     }
 }
