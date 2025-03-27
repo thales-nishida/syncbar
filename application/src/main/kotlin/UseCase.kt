@@ -2,9 +2,6 @@ package br.com.thalesnishida.syncbar.application
 
 import user.User
 
-class UseCase {
-
-    fun execute(): User {
-        return User.newUser("John Doe", "john.doe@example.com", "password123", "ADMIN")
-    }
+abstract class UseCase<IN, OUT> {
+    abstract fun execute(anIn: IN): OUT
 }
