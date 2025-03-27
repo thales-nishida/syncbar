@@ -13,11 +13,11 @@ class CreateUserUseCaseTest {
     fun givenAValidParams_whenCallCreateUser_thenReturnSuccess() {
         val expectName = "Test Test"
         val expectEmail = "test@test.com"
-        val expectPassword = "testdas"
+        val expectPassword = "testdaaq12@"
         val expectTypeUser = "ADMIN"
-        val expectDeactivate = false
+        val expectActivate = true
 
-        val aCommand = CreateUserCommand.with(expectName, expectEmail, expectPassword, expectTypeUser, expectDeactivate)
+        val aCommand = CreateUserCommand.with(expectName, expectEmail, expectPassword, expectTypeUser, expectActivate)
 
         val userGateway: UserGateway = mockk()
 
@@ -36,7 +36,7 @@ class CreateUserUseCaseTest {
                         expectPassword == aUser.aPassword &&
                         expectEmail == aUser.aEmail &&
                         expectTypeUser == aUser.aTypeUser &&
-                        expectDeactivate == aUser.isActivate
+                        expectActivate == aUser.isActivate
             })
         }
 
