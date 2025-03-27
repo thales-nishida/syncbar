@@ -290,7 +290,8 @@ class UserTest {
         val typeUserToUpdate = "ADMIN"
         val deactivateUpdate = false
 
-        val updateUser : User = actualUser.getUpdateName(nameToUpdate, emailToUpdate, passwordToUpdate,typeUserToUpdate, deactivateUpdate)
+        val updateUser: User =
+            actualUser.getUpdateName(nameToUpdate, emailToUpdate, passwordToUpdate, typeUserToUpdate, deactivateUpdate)
 
         Assertions.assertDoesNotThrow() { updateUser.validate(ThrowsValidationHandler()) }
 
