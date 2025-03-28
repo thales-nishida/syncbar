@@ -215,6 +215,24 @@ class UserTest {
     }
 
     @Test
+    fun givenAnInvalidPasswordNull_whenCallUserAndValidated_thenShouldReturnError() {
+        val expectName = "Test"
+        val exceptionErrorCount = 1
+        val exceptionErrorMessage = "'password' should not be null"
+        val expectEmail = "teste@test.com"
+        val expectTypeUser = "ADMIN"
+        val expectPassword = null
+        val expectActivate = true
+
+        val actualUser = User.newUser(expectName, expectEmail, expectPassword, expectTypeUser, expectActivate)
+
+        val actualException =
+            Assertions.assertThrows(DomainException::class.java) { actualUser.validate(ThrowsValidationHandler()) }
+        Assertions.assertEquals(exceptionErrorMessage, actualException.getErrors()[0].message)
+        Assertions.assertEquals(exceptionErrorCount, actualException.getErrors().size)
+    }
+
+    @Test
     fun givenAnInvalidPasswordWithoutSpecialCharacter_whenCallUserAndValidated_thenShouldReturnError() {
         val expectName = "Test"
         val exceptionErrorCount = 1

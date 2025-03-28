@@ -63,6 +63,9 @@ class UserValidator(private val user: User, aHandler: ValidationHandler) : Valid
 
     private fun checkConstrainsPassword() {
         val password = this.user.aPassword
+        if(password == null) {
+            this.validationHandler().append(Error("'password' should not be null"))
+        }
         if(!password!!.contains("@") && !password.contains("!") && !password.contains("#")) {
             this.validationHandler().append(Error("'password' format is not valid"))
         }
