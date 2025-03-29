@@ -13,7 +13,7 @@ class DefaultCreateUserUseCase(private val userGateway: UserGateway) : CreateUse
         aUser.validate(notification)
 
         return if (notification.hasErrors()) {
-            Either.Left(Notification())
+            Either.Left(notification)
         } else {
             create(aUser)
         }

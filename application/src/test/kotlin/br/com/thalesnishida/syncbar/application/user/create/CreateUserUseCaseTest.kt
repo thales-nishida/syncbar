@@ -106,8 +106,8 @@ class CreateUserUseCaseTest {
 
         val aCommand = CreateUserCommand.with(expectName, expectEmail, expectPassword, expectTypeUser, expectActivate)
 
-        val actualException = Assertions.assertThrows(DomainException::class.java) { useCase.execute(aCommand) }
-        Assertions.assertEquals(exceptErrorMessage, actualException.getErrors()[0].message)
+        val notification = useCase.execute(aCommand).leftOrNull()
+        Assertions.assertEquals(exceptErrorMessage, notification!!.getErrors()[0].message)
 
         verify(exactly = 0) { userGateway.create(any()) }
     }
@@ -123,8 +123,8 @@ class CreateUserUseCaseTest {
 
         val aCommand = CreateUserCommand.with(expectName, expectEmail, expectPassword, expectTypeUser, expectActivate)
 
-        val actualException = Assertions.assertThrows(DomainException::class.java) { useCase.execute(aCommand) }
-        Assertions.assertEquals(exceptErrorMessage, actualException.getErrors()[0].message)
+        val notification = useCase.execute(aCommand).leftOrNull()
+        Assertions.assertEquals(exceptErrorMessage, notification!!.firstError()?.message)
 
         verify(exactly = 0) { userGateway.create(any()) }
     }
@@ -140,8 +140,8 @@ class CreateUserUseCaseTest {
 
         val aCommand = CreateUserCommand.with(expectName, expectEmail, expectPassword, expectTypeUser, expectActivate)
 
-        val actualException = Assertions.assertThrows(DomainException::class.java) { useCase.execute(aCommand) }
-        Assertions.assertEquals(exceptErrorMessage, actualException.getErrors()[0].message)
+        val notification = useCase.execute(aCommand).leftOrNull()
+        Assertions.assertEquals(exceptErrorMessage, notification!!.firstError()?.message)
 
         verify(exactly = 0) { userGateway.create(any()) }
     }
@@ -154,15 +154,18 @@ class CreateUserUseCaseTest {
         val expectTypeUser = "ADMIN"
         val expectActivate = true
         val exceptErrorMessage = "Gateway error"
+        val exceptErrorCount = 1
 
         val aCommand = CreateUserCommand.with(expectName, expectEmail, expectPassword, expectTypeUser, expectActivate)
 
         every { userGateway.create(any()) } throws IllegalStateException("Gateway error")
 
-        val actualException = Assertions.assertThrows(IllegalStateException::class.java) { useCase.execute(aCommand) }
-        Assertions.assertEquals(exceptErrorMessage, actualException.message)
+        val notification = useCase.execute(aCommand).leftOrNull()
 
-        verify(exactly = 1) { userGateway.create(any()) }
+        Assertions.assertEquals(exceptErrorCount, notification!!.getErrors().size)
+        Assertions.assertEquals(exceptErrorMessage, notification.firstError()?.message)
+
+        verify(exactly = 0) { userGateway.create(any()) }
     }
 
 }

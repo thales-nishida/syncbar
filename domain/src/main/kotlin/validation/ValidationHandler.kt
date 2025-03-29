@@ -12,6 +12,14 @@ interface ValidationHandler {
         return getErrors().isNotEmpty()
     }
 
+    fun firstError() : Error? {
+        return if(getErrors().isNotEmpty()) {
+            getErrors().first()
+        } else {
+            null
+        }
+    }
+
     interface Validation {
         fun validate() : Void
     }
