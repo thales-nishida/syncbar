@@ -17,20 +17,24 @@ class UserValidator(private val user: User, aHandler: ValidationHandler) : Valid
     override fun validate() {
         checkConstrainsName()
         checkConstrainsEmail()
-        checkConstrainsTypeUser()
         checkConstrainsPassword()
+        checkConstrainsTypeUser()
     }
 
     private fun checkConstrainsName() {
         val name = this.user.aName
+
         if (name == null) {
             this.validationHandler().append(Error("'name' should not be null"))
         }
-        if (name!!.isBlank() || name.isEmpty()) {
-            this.validationHandler().append(Error("'name' should not be empty"))
-        }
-        if (name.length <= NAME_MIN_LENGTH || name.trim().length > NAME_MAX_LENGTH) {
-            this.validationHandler().append(Error("'name' must between 3 characters and 255 characters"))
+
+        name?.let {
+            if (it.isBlank() || it.isEmpty()) {
+                this.validationHandler().append(Error("'name' should not be empty"))
+            }
+            if (it.trim().length <= NAME_MIN_LENGTH || it.trim().length > NAME_MAX_LENGTH) {
+                this.validationHandler().append(Error("'name' must between 3 characters and 255 characters"))
+            }
         }
     }
 
@@ -40,11 +44,13 @@ class UserValidator(private val user: User, aHandler: ValidationHandler) : Valid
         if(email == null) {
             this.validationHandler().append(Error("'email' should not be null"))
         }
-        if(email!!.isBlank() || email.isEmpty()) {
-            this.validationHandler().append(Error("'email' should not be empty"))
-        }
-        if(!email.matches(emailRegex)) {
-            this.validationHandler().append(Error("'email' format is not valid"))
+        email?.let {
+            if(it.isBlank() || it.isEmpty()) {
+                this.validationHandler().append(Error("'email' should not be empty"))
+            }
+            if(!it.matches(emailRegex)) {
+                this.validationHandler().append(Error("'email' format is not valid"))
+            }
         }
     }
 
@@ -53,11 +59,13 @@ class UserValidator(private val user: User, aHandler: ValidationHandler) : Valid
         if(typeUser == null) {
             this.validationHandler().append(Error("'typeUser' should not be null"))
         }
-        if (typeUser!!.isEmpty() || typeUser.isBlank()) {
-            this.validationHandler().append(Error("'typeUser' should not be empty"))
-        }
-        if(typeUser != ADMIN && typeUser != EMPLOYEE && typeUser != CLIENT) {
-            this.validationHandler().append(Error("'typeUser' format is not valid"))
+        typeUser?.let {
+            if (it.isEmpty() || it.isBlank()) {
+                this.validationHandler().append(Error("'typeUser' should not be empty"))
+            }
+            if(!(it.contentEquals(ADMIN) || it.contentEquals(EMPLOYEE)|| it.contentEquals(CLIENT))) {
+                this.validationHandler().append(Error("'typeUser' format is not valid"))
+            }
         }
     }
 
@@ -66,11 +74,13 @@ class UserValidator(private val user: User, aHandler: ValidationHandler) : Valid
         if(password == null) {
             this.validationHandler().append(Error("'password' should not be null"))
         }
-        if(!password!!.contains("@") && !password.contains("!") && !password.contains("#")) {
-            this.validationHandler().append(Error("'password' format is not valid"))
-        }
-        if(password.length <= MIN_LENGTH_PASSWORD || password.trim().length > NAME_MAX_LENGTH) {
-            this.validationHandler().append(Error("'password' must between 8 characters and 255 characters"))
+        password?.let {
+            if(!(it.contains("@") || it.contains("!") || it.contains("#"))) {
+                this.validationHandler().append(Error("'password' format is not valid"))
+            }
+            if(it.length <= MIN_LENGTH_PASSWORD || it.trim().length > NAME_MAX_LENGTH) {
+                this.validationHandler().append(Error("'password' must between 8 characters and 255 characters"))
+            }
         }
     }
 }

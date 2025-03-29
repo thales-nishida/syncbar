@@ -49,7 +49,7 @@ class UserTest {
 
     @Test
     fun givenAnInvalidEmptyName_whenCallUserAndValidated_thenShouldReturnError() {
-        val expectName = "  "
+        val expectName = " "
         val exceptionErrorCount = 1
         val exceptionErrorMessage = "'name' should not be empty"
         val expectEmail = "test@test.com"
@@ -94,7 +94,7 @@ class UserTest {
         val exceptionErrorCount = 1
         val exceptionErrorMessage = "'name' must between 3 characters and 255 characters"
         val expectEmail = "test@test.com"
-        val expectPassword = "test"
+        val expectPassword = "testdasda@"
         val expectTypeUser = "ADMIN"
         val expectActivate = true
 
@@ -166,7 +166,7 @@ class UserTest {
         val exceptionErrorCount = 1
         val exceptionErrorMessage = "'typeUser' should not be empty"
         val expectEmail = "test@test.com"
-        val expectPassword = "test"
+        val expectPassword = "tesadas@st"
         val expectTypeUser = " "
         val expectActivate = true
 
@@ -184,7 +184,7 @@ class UserTest {
         val exceptionErrorCount = 1
         val exceptionErrorMessage = "'typeUser' should not be null"
         val expectEmail = "test@test.com"
-        val expectPassword = "test"
+        val expectPassword = "tesssdsa@t"
         val expectTypeUser: String? = null
         val expectActivate = true
 
@@ -202,7 +202,7 @@ class UserTest {
         val exceptionErrorCount = 1
         val exceptionErrorMessage = "'typeUser' format is not valid"
         val expectEmail = "teste@test.com"
-        val expectPassword = "test@"
+        val expectPassword = "teskddmk@"
         val expectTypeUser = "CLIENTasda"
         val expectActivate = true
 
@@ -296,17 +296,23 @@ class UserTest {
     fun givenAValidParams_whenCallUpdate_thenShouldReturnUserUpdate() {
         val expectName = "Test Name"
         val expectEmail = "test@test.com"
-        val expectPassword = "testsdsad@"
+        val expectPassword = "testwwsdsad@"
         val expectTypeUser = "ADMIN"
         val expectActivate = true
 
-        val actualUser = User.newUser(expectName, expectEmail, expectPassword, expectTypeUser, expectActivate)
+        val actualUser = User.newUser(
+            name = expectName,
+            email = expectEmail,
+            password = expectPassword,
+            typeUser = expectTypeUser,
+            isActivate = expectActivate
+        )
 
         Assertions.assertDoesNotThrow() { actualUser.validate(ThrowsValidationHandler()) }
 
         val nameToUpdate = "Test Name Update"
         val emailToUpdate = "test@test.com.br"
-        val passwordToUpdate = "testsdsad@"
+        val passwordToUpdate = "testsdsssad@"
         val typeUserToUpdate = "ADMIN"
         val deactivateUpdate = false
 
