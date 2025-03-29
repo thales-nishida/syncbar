@@ -37,10 +37,10 @@ class CreateUserUseCaseTest {
 
         every { userGateway.create(any()) } answers { firstArg() }
 
-        val actualOutput = useCase.execute(aCommand)
+        val actualOutput = useCase.execute(aCommand).getOrNone()
 
         Assertions.assertNotNull(actualOutput)
-        Assertions.assertNotNull(actualOutput.userId)
+        Assertions.assertNotNull(actualOutput.getOrNull()?.userId)
 
         verify(exactly = 1) {
             userGateway.create(match { aUser ->
@@ -78,11 +78,19 @@ class CreateUserUseCaseTest {
         val expectTypeUser = "ADMIN"
         val expectActivate = true
         val exceptErrorMessage = "'name' should not be null"
+        val exceptErrorCount = 1
 
-        val aCommand = CreateUserCommand.with(expectName, expectEmail, expectPassword, expectTypeUser, expectActivate)
+        val aCommand = CreateUserCommand.with(
+            aName = expectName,
+            aEmail= expectEmail,
+            aPassword = expectPassword,
+            aTypeUser = expectTypeUser,
+            aDeactivate = expectActivate
+        )
 
-        val actualException = Assertions.assertThrows(DomainException::class.java) { useCase.execute(aCommand) }
-        Assertions.assertEquals(exceptErrorMessage, actualException.getErrors()[0].message)
+        val notification = useCase.execute(aCommand).leftOrNull()
+        Assertions.assertEquals(exceptErrorCount, notification?.getErrors()?.size)
+        Assertions.assertEquals(exceptErrorMessage, notification!!.getErrors()[0].message)
 
         verify(exactly = 0) { userGateway.create(any()) }
     }
