@@ -11,7 +11,9 @@ class Notification(private val errors: MutableList<Error> = mutableListOf()) : V
     }
 
     fun create(t: Throwable): Notification {
-        return create(Error(t.message))
+        val notification = create()
+        notification.errors.add(Error(t.message ?: "Unknown error"))
+        return notification
     }
 
     fun create(anError: Error): Notification {

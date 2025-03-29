@@ -1,6 +1,5 @@
 package br.com.thalesnishida.syncbar.application.user.create
 
-import exceptions.DomainException
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -9,7 +8,6 @@ import io.mockk.verify
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import user.UserGateway
 
 class CreateUserUseCaseTest {
@@ -64,8 +62,8 @@ class CreateUserUseCaseTest {
 
         val aCommand = CreateUserCommand.with(expectName, expectEmail, expectPassword, expectTypeUser, expectActivate)
 
-        val actualException = Assertions.assertThrows(DomainException::class.java) { useCase.execute(aCommand) }
-        Assertions.assertEquals(exceptErrorMessage, actualException.getErrors()[0].message)
+        val notification = useCase.execute(aCommand).leftOrNull()
+        Assertions.assertEquals(exceptErrorMessage, notification?.firstError()?.message)
 
         verify(exactly = 0) { userGateway.create(any()) }
     }
@@ -82,7 +80,7 @@ class CreateUserUseCaseTest {
 
         val aCommand = CreateUserCommand.with(
             aName = expectName,
-            aEmail= expectEmail,
+            aEmail = expectEmail,
             aPassword = expectPassword,
             aTypeUser = expectTypeUser,
             aDeactivate = expectActivate
@@ -158,14 +156,14 @@ class CreateUserUseCaseTest {
 
         val aCommand = CreateUserCommand.with(expectName, expectEmail, expectPassword, expectTypeUser, expectActivate)
 
-        every { userGateway.create(any()) } throws IllegalStateException("Gateway error")
+        every { userGateway.create(any()) } throws IllegalStateException(exceptErrorMessage)
 
         val notification = useCase.execute(aCommand).leftOrNull()
 
         Assertions.assertEquals(exceptErrorCount, notification!!.getErrors().size)
         Assertions.assertEquals(exceptErrorMessage, notification.firstError()?.message)
 
-        verify(exactly = 0) { userGateway.create(any()) }
+        verify(exactly = 1) { userGateway.create(any()) }
     }
 
 }
