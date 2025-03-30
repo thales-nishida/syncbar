@@ -12,7 +12,13 @@ open class User private constructor(
     var isActivate: Boolean?
 ) : AggregateRoot<UserID>(anId) {
     companion object {
-        fun newUser(name: String?, email: String?, password: String?, typeUser: String?, isActivate: Boolean? = true): User {
+        fun newUser(
+            name: String?,
+            email: String?,
+            password: String?,
+            typeUser: String?,
+            isActivate: Boolean?
+        ): User {
             val id = UserID.unique()
             return User(id, name, email, password, typeUser, isActivate)
         }
@@ -22,7 +28,7 @@ open class User private constructor(
         UserValidator(this, handler).validate()
     }
 
-    fun getUpdateName(name: String, email: String?, password: String?, typeUser: String?, isActivate: Boolean?): User {
+    fun update(name: String?, email: String?, password: String?, typeUser: String?, isActivate: Boolean?): User {
         this.aName = name
         this.aEmail = email
         this.aPassword = password

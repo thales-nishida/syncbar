@@ -15,7 +15,7 @@ class UserID constructor(private val value: String) : Identifier() {
             return UserID(anId)
         }
 
-        fun from(anId: UUID): UserID {
+        fun from(anId: UserID): UserID {
             return UserID(anId.toString().lowercase(Locale.getDefault()))
         }
     }

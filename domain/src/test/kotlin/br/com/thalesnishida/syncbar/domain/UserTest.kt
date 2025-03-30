@@ -16,7 +16,7 @@ class UserTest {
         val expectTypeUser = "ADMIN"
         val expectActivate = true
 
-        val actualUser = User.newUser(expectName, expectEmail, expectPassword, expectTypeUser)
+        val actualUser = User.newUser(expectName, expectEmail, expectPassword, expectTypeUser, expectActivate)
 
         Assertions.assertDoesNotThrow() { actualUser.validate(ThrowsValidationHandler()) }
 
@@ -283,7 +283,6 @@ class UserTest {
         """.trimIndent()
         val expectActivate = true
 
-
         val actualUser = User.newUser(expectName, expectEmail, expectPassword, expectTypeUser, expectActivate)
 
         val actualException =
@@ -314,10 +313,10 @@ class UserTest {
         val emailToUpdate = "test@test.com.br"
         val passwordToUpdate = "testsdsssad@"
         val typeUserToUpdate = "ADMIN"
-        val deactivateUpdate = false
+        val deactivateUpdate = true
 
         val updateUser: User =
-            actualUser.getUpdateName(nameToUpdate, emailToUpdate, passwordToUpdate, typeUserToUpdate, deactivateUpdate)
+            actualUser.update(nameToUpdate, emailToUpdate, passwordToUpdate, typeUserToUpdate, deactivateUpdate)
 
         Assertions.assertDoesNotThrow() { updateUser.validate(ThrowsValidationHandler()) }
 
@@ -326,8 +325,98 @@ class UserTest {
         Assertions.assertEquals(emailToUpdate, updateUser.aEmail)
         Assertions.assertEquals(passwordToUpdate, updateUser.aPassword)
         Assertions.assertEquals(typeUserToUpdate, updateUser.aTypeUser)
-//        Assertions.assertEquals(deactivateUpdate, updateUser.isActivate)
     }
 
+    @Test
+    fun givenAValidActivate_whenCallDeactivate_thenReturnUserInactivate() {
+        val expectName = "Test Name"
+        val expectEmail = "test@test.com"
+        val expectPassword = "testwwsdsad@"
+        val expectTypeUser = "ADMIN"
+        val expectActivate = true
 
+        val aUser = User.newUser(
+            name = expectName,
+            email = expectEmail,
+            password = expectPassword,
+            typeUser = expectTypeUser,
+            isActivate = expectActivate
+        )
+
+        Assertions.assertDoesNotThrow() { aUser.validate(ThrowsValidationHandler()) }
+
+        Assertions.assertTrue(aUser.isActivate!!)
+
+        val actualUser = aUser.deactivate() // TODO: Create Method for deactivate
+
+        Assertions.assertEquals(aUser.anId, actualUser.anId)
+        Assertions.assertEquals(expectName, actualUser.aName)
+        Assertions.assertEquals(expectEmail, actualUser.aEmail)
+        Assertions.assertEquals(expectPassword, actualUser.aPassword)
+        Assertions.assertEquals(expectTypeUser, actualUser.aTypeUser)
+        Assertions.assertEquals(expectActivate, actualUser.aActive)
+    }
+
+    @Test
+    fun givenAInvalidParamsActivateNull_whenCallsUpdate_thenShouldReturnError() {
+        val exceptName = "Test Name"
+        val exceptEmail = "test@test.com"
+        val expectPassword = "test@test.com"
+        val expectTypeUser = "ADMIN"
+        val exceptErrorMessage = "'isActive' should not be null"
+        val exceptionErrorCount = 1
+        val exceptActive = null
+
+        val actualUser = User.newUser(
+            name = exceptName,
+            email = exceptEmail,
+            password = expectPassword,
+            typeUser = expectTypeUser,
+            isActivate = exceptActive
+        )
+
+        val actualException =
+            Assertions.assertThrows(DomainException::class.java) { actualUser.validate(ThrowsValidationHandler()) }
+        Assertions.assertEquals(exceptErrorMessage, actualException.getErrors()[0].message)
+        Assertions.assertEquals(exceptionErrorCount, actualException.getErrors().size)
+    }
+
+    @Test
+    fun givenAValidParamsToDisableUser_whenCallsUpdate_thenShouldReturnError() {
+        val exceptName = "Test Name"
+        val exceptEmail = "test@test.com"
+        val expectPassword = "test@test.com"
+        val expectTypeUser = "ADMIN"
+        val exceptErrorMessage = "'user' is not activated"
+        val exceptionErrorCount = 1
+        val exceptActivate = false
+
+        val actualUser = User.newUser(
+            name = exceptName,
+            email = exceptEmail,
+            password = expectPassword,
+            typeUser = expectTypeUser,
+            isActivate = exceptActivate
+        )
+
+        Assertions.assertDoesNotThrow() { actualUser.validate(ThrowsValidationHandler()) }
+
+        val nameToUpdate = "Test Name Update"
+        val emailToUpdate = "test@test.com.br"
+        val passwordToUpdate = "testsdsssad@"
+        val typeUserToUpdate = "ADMIN"
+
+        val updateUser = actualUser.update(
+            name = nameToUpdate,
+            email = emailToUpdate,
+            password = passwordToUpdate,
+            typeUser = typeUserToUpdate,
+            isActivate = exceptActivate
+        )
+
+        val actualException =
+            Assertions.assertThrows(DomainException::class.java) { updateUser.validate(ThrowsValidationHandler()) }
+        Assertions.assertEquals(exceptErrorMessage, actualException.getErrors()[0].message)
+        Assertions.assertEquals(exceptionErrorCount, actualException.getErrors().size)
+    }
 }

@@ -23,18 +23,27 @@ class UserValidator(private val user: User, aHandler: ValidationHandler) : Valid
 
     private fun checkConstrainsName() {
         val name = this.user.aName
+        val isActive = this.user.isActivate
+
+        checkConstrainsActivate()
 
         if (name == null) {
             this.validationHandler().append(Error("'name' should not be null"))
         }
 
-        name?.let {
-            if (it.isBlank() || it.isEmpty()) {
-                this.validationHandler().append(Error("'name' should not be empty"))
+        name?.let { n ->
+            isActive?.let {
+                if ((n.isBlank() || n.isEmpty())) {
+                    this.validationHandler().append(Error("'name' should not be empty"))
+                }
+                if (n.trim().length <= NAME_MIN_LENGTH || n.trim().length > NAME_MAX_LENGTH) {
+                    this.validationHandler().append(Error("'name' must between 3 characters and 255 characters"))
+                }
+                if(!isActive) {
+                    this.validationHandler().append(Error("'user' is not activated"))
+                }
             }
-            if (it.trim().length <= NAME_MIN_LENGTH || it.trim().length > NAME_MAX_LENGTH) {
-                this.validationHandler().append(Error("'name' must between 3 characters and 255 characters"))
-            }
+
         }
     }
 
@@ -81,6 +90,13 @@ class UserValidator(private val user: User, aHandler: ValidationHandler) : Valid
             if(it.length <= MIN_LENGTH_PASSWORD || it.trim().length > NAME_MAX_LENGTH) {
                 this.validationHandler().append(Error("'password' must between 8 characters and 255 characters"))
             }
+        }
+    }
+
+    private fun checkConstrainsActivate() {
+        val isActivate = this.user.isActivate
+        if(isActivate == null){
+            this.validationHandler().append(Error("'isActive' should not be null"))
         }
     }
 }
