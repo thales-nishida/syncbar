@@ -5,7 +5,7 @@ data class CreateUserCommand(
     val email: String?,
     val password: String?,
     val typeUser: String?,
-    val deactivate: Boolean?
+    val deactivate: Boolean? = null
 ) {
     companion object {
         fun with(
