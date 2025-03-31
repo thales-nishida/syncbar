@@ -2,6 +2,7 @@ package user
 
 import AggregateRoot
 import validation.ValidationHandler
+import java.time.Instant
 
 open class User private constructor(
     val anId: UserID,
@@ -9,7 +10,10 @@ open class User private constructor(
     var aEmail: String?,
     var aPassword: String?,
     var aTypeUser: String?,
-    var isActivate: Boolean?
+    var active: Boolean?,
+    val createdAt: Instant = Instant.now(),
+    var updatedAt: Instant = Instant.now(),
+    var deletedAt: Instant?,
 ) : AggregateRoot<UserID>(anId) {
     companion object {
         fun newUser(
@@ -17,10 +21,13 @@ open class User private constructor(
             email: String?,
             password: String?,
             typeUser: String?,
-            isActivate: Boolean?
+            isActivate: Boolean?,
+            createdAt: Instant = Instant.now(),
+            updatedAt: Instant = Instant.now(),
+            deletedAt: Instant? = null,
         ): User {
             val id = UserID.unique()
-            return User(id, name, email, password, typeUser, isActivate)
+            return User(id, name, email, password, typeUser, isActivate, createdAt, updatedAt, deletedAt)
         }
     }
 
@@ -33,7 +40,23 @@ open class User private constructor(
         this.aEmail = email
         this.aPassword = password
         this.aTypeUser = typeUser
-        this.isActivate = isActivate
+        this.active = isActivate
+        return this
+    }
+
+    fun deactivate(): User {
+        if (this.deletedAt == null) {
+            this.deletedAt = Instant.now()
+        }
+        this.active = false
+        this.updatedAt = Instant.now()
+        return this
+    }
+
+    fun activate(): User {
+        this.deletedAt = null
+        this.active = true
+        this.updatedAt = Instant.now()
         return this
     }
 }
