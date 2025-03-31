@@ -46,7 +46,7 @@ class CreateUserUseCaseTest {
                         expectPassword == aUser.aPassword &&
                         expectEmail == aUser.aEmail &&
                         expectTypeUser == aUser.aTypeUser &&
-                        expectActivate == aUser.isActivate
+                        expectActivate == aUser.active
             })
         }
     }

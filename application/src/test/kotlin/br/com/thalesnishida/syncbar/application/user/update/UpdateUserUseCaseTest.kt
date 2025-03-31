@@ -34,14 +34,15 @@ class UpdateUserUseCaseTest {
             email = "test2@test.com2",
             typeUser = "ADMIN",
             password = "test2@test.com2",
+            isActivate = true
         )
 
-        val expectName = "Test 1"
-        val expectEmail = "test@test.com"
-        val expectPassword = "tesqwqqt@das"
+        val expectId = aUser.anId
+        val expectName = "Test Update"
+        val expectEmail = "update@test.com"
+        val expectPassword = "updateddd@das"
         val expectType = "CLIENT"
         val expectActivate = false
-        val expectId = aUser.anId
 
         val aCommand = UpdateUserCommand.with(
             anId = expectId,
@@ -67,18 +68,20 @@ class UpdateUserUseCaseTest {
                 Objects.equals(expectName, aUpdateThat.aName)
                 Objects.equals(expectEmail, aUpdateThat.aEmail)
                 Objects.equals(expectType, aUpdateThat.aTypeUser)
-                Objects.equals(expectActivate, aUpdateThat.isActivate)
+                aUser.updatedAt.isBefore(aUpdateThat.updatedAt)
+                Objects.equals(expectActivate, aUpdateThat.active)
             })
         }
     }
 
     @Test
-    fun givenAInvalidName_whenCallsUpdateUser_shouldReturnErrorMessage() {
+    fun givenAInvalidName_whenCallsUpdateUser_shouldReturnDomainException() {
         val aUser = User.newUser(
             name = "Test",
             email = "test@test.com",
             password = "test2@test.com",
             typeUser = "ADMIN",
+            isActivate = true
         )
 
         val expectId = aUser.anId
@@ -88,6 +91,7 @@ class UpdateUserUseCaseTest {
         val exceptPassword = "tesqwqqt@das"
         val exceptErrorMessage = "'name' should not be null"
         val exceptErrorCount = 1
+        val expectActivate = true
 
         val aCommand = UpdateUserCommand.with(
             anId = expectId,
@@ -109,12 +113,13 @@ class UpdateUserUseCaseTest {
     }
 
     @Test
-    fun givenAValidParamsToDisableUser_whenCallsUpdateUser_shouldReturnErrorMessage() {
+    fun givenAValidInactivateCommand_whenCallsUpdateUser_shouldReturnInactivateUser() {
         val aUser = User.newUser(
             name = "Test",
             email = "test@test.com",
             password = "test2@test.com",
             typeUser = "ADMIN",
+            isActivate = true
         )
 
         val expectId = aUser.anId
@@ -122,8 +127,7 @@ class UpdateUserUseCaseTest {
         val expectEmail = "test@test.com"
         val expectType = "CLIENT"
         val exceptPassword = "tesqwqqt@das"
-        val exceptErrorMessage = "'user' is disabled to update"
-        val exceptErrorCount = 1
+        val exceptActivate = false
 
         val aCommand = UpdateUserCommand.with(
             anId = expectId,
@@ -131,17 +135,31 @@ class UpdateUserUseCaseTest {
             aEmail = expectEmail,
             aTypeUser = expectType,
             aPassword = exceptPassword,
+            aIsActivate = exceptActivate
         )
+
+        Assertions.assertTrue(aUser.active!!)
+        Assertions.assertNull(aUser.deletedAt)
 
         every { userGateway.findById(eq(expectId)) } returns Optional.of(aUser)
         every { userGateway.update(any()) } answers { firstArg() }
 
-        val actualOutput = useCase.execute(aCommand).leftOrNull()
+        val actualOutput = useCase.execute(aCommand).getOrNone()
 
-        Assertions.assertEquals(exceptErrorMessage, actualOutput?.firstError()?.message)
-        Assertions.assertEquals(exceptErrorCount, actualOutput?.getErrors()?.size)
+        Assertions.assertNotNull(actualOutput)
+        Assertions.assertNotNull(actualOutput.getOrNull()?.userId)
 
         verify(exactly = 1) { userGateway.findById(eq(expectId)) }
+        verify(exactly = 1) {
+            userGateway.update(withArg { aUpdateThat ->
+                Objects.equals(expectId, aUpdateThat.anId)
+                Objects.equals(expectName, aUpdateThat.aName)
+                Objects.equals(expectEmail, aUpdateThat.aEmail)
+                Objects.equals(expectType, aUpdateThat.aTypeUser)
+                aUser.updatedAt.isBefore(aUpdateThat.updatedAt)
+                Objects.equals(exceptActivate, aUpdateThat.active)
+            })
+        }
     }
 
     @Test
@@ -151,6 +169,7 @@ class UpdateUserUseCaseTest {
             email = "test@test.com",
             password = "test2@test.com",
             typeUser = "ADMIN",
+            isActivate = true
         )
 
         val expectId = aUser.anId

@@ -8,19 +8,19 @@ import validation.handler.Notification
 import java.util.function.Supplier
 
 class DefaultUpdateUserUseCase(private val userGateway: UserGateway) : UpdateUserUseCase() {
-    override fun execute(aCommand: UpdateUserCommand): Either<Notification, UpdateUserOutput> {
-        val anId = aCommand.id
-        val aName = aCommand.name
-        val aEmail = aCommand.email
-        val aPassword = aCommand.password
-        val aTypeUser = aCommand.typeUser
-        val aIsActivated = aCommand.isActivated
+    override fun execute(anIn: UpdateUserCommand): Either<Notification, UpdateUserOutput> {
+        val anId = anIn.id
+        val aName = anIn.name
+        val aEmail = anIn.email
+        val aPassword = anIn.password
+        val aTypeUser = anIn.typeUser
+        val aIsActive = anIn.isActivated
 
         val aUser = this.userGateway.findById(anId)
             .orElseThrow(Supplier { DomainException.with(validation.Error("User with ID $anId not found")) })
 
         val notification: Notification = Notification().create()
-        aUser.update(aName, aEmail, aPassword, aTypeUser, aIsActivated).validate(notification)
+        aUser.update(aName, aEmail, aPassword, aTypeUser, aIsActive).validate(notification)
 
         return if (notification.hasErrors()) {
             Either.Left(notification)
