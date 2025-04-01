@@ -1,5 +1,6 @@
 package br.com.thalesnishida.syncbar.application.user.update
 
+import exceptions.DomainException
 import io.mockk.MockKAnnotations
 import io.mockk.clearMocks
 import io.mockk.every
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import user.User
 import user.UserGateway
+import user.UserID
 import java.util.*
 
 class UpdateUserUseCaseTest {
@@ -198,5 +200,35 @@ class UpdateUserUseCaseTest {
         Assertions.assertEquals(exceptErrorMessage, notification?.getErrors()?.get(0)?.message)
 
         verify(exactly = 1) { userGateway.update(any()) }
+    }
+
+    @Test
+    fun givenAInvalidID_whenCallsUserUpdate_thenShouldReturnNotFoundException() {
+        val expectId = UserID.from("12345")
+        val expectName = "Test"
+        val expectEmail = "test@test.com"
+        val expectType = "CLIENT"
+        val exceptPassword = "tesqwqqt@das"
+        val exceptErrorCount = 1
+        val exceptErrorMessage = "User with ID $expectId not found"
+
+        val aCommand = UpdateUserCommand.with(
+            anId = expectId,
+            aName = expectName,
+            aEmail = expectEmail,
+            aTypeUser = expectType,
+            aPassword = exceptPassword
+        )
+
+        every { userGateway.findById(expectId) } returns Optional.empty()
+
+        val actualException =
+            Assertions.assertThrows(DomainException::class.java) { useCase.execute(aCommand).leftOrNull() }
+
+        Assertions.assertEquals(exceptErrorMessage, actualException?.getErrors()?.get(0)?.message)
+        Assertions.assertEquals(exceptErrorCount, actualException?.getErrors()?.size)
+
+        verify(exactly = 1) { userGateway.findById(eq(expectId)) }
+        verify(exactly = 0) { userGateway.update(any()) }
     }
 }

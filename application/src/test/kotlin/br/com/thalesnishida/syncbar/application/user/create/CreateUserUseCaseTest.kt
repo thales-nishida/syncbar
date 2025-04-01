@@ -1,6 +1,7 @@
 package br.com.thalesnishida.syncbar.application.user.create
 
 import io.mockk.MockKAnnotations
+import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -21,6 +22,7 @@ class CreateUserUseCaseTest {
     @BeforeEach
     fun setUp() {
         MockKAnnotations.init(this)
+        clearMocks(userGateway)
     }
 
     @Test
