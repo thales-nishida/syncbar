@@ -193,7 +193,6 @@ class UpdateUserUseCaseTest {
         every { userGateway.findById(eq(expectId)) } returns Optional.of(aUser)
         every { userGateway.update(any()) } throws IllegalStateException(exceptErrorMessage)
 
-
         val notification = useCase.execute(aCommand).leftOrNull()
 
         Assertions.assertEquals(exceptErrorCount, notification?.getErrors()?.size)
