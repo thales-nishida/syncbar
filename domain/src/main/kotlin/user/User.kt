@@ -8,7 +8,6 @@ open class User private constructor(
     val anId: UserID,
     var aName: String?,
     var aEmail: String?,
-    var aPassword: String?,
     var aTypeUser: String?,
     var active: Boolean?,
     val createdAt: Instant = Instant.now(),
@@ -19,7 +18,6 @@ open class User private constructor(
         fun newUser(
             name: String?,
             email: String?,
-            password: String?,
             typeUser: String?,
             isActivate: Boolean?,
             createdAt: Instant = Instant.now(),
@@ -27,7 +25,7 @@ open class User private constructor(
             deletedAt: Instant? = null,
         ): User {
             val id = UserID.unique()
-            return User(id, name, email, password, typeUser, isActivate, createdAt, updatedAt, deletedAt)
+            return User(id, name, email, typeUser, isActivate, createdAt, updatedAt, deletedAt)
         }
     }
 
@@ -35,10 +33,9 @@ open class User private constructor(
         UserValidator(this, handler).validate()
     }
 
-    fun update(name: String?, email: String?, password: String?, typeUser: String?, isActivate: Boolean?): User {
+    fun update(name: String?, email: String?, typeUser: String?, isActivate: Boolean?): User {
         this.aName = name
         this.aEmail = email
-        this.aPassword = password
         this.aTypeUser = typeUser
         this.active = isActivate
         return this

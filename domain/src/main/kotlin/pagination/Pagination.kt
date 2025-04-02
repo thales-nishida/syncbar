@@ -5,5 +5,4 @@ data class Pagination<T>(
     val perPage: Int,
     val totalPages: Long,
     val items: List<T>,
-) {
-}
+)

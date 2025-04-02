@@ -17,7 +17,6 @@ class UserValidator(private val user: User, aHandler: ValidationHandler) : Valid
     override fun validate() {
         checkConstrainsName()
         checkConstrainsEmail()
-        checkConstrainsPassword()
         checkConstrainsTypeUser()
     }
 
@@ -64,21 +63,6 @@ class UserValidator(private val user: User, aHandler: ValidationHandler) : Valid
             }
             if (!(it.contentEquals(ADMIN) || it.contentEquals(EMPLOYEE) || it.contentEquals(CLIENT))) {
                 this.validationHandler().append(Error("'typeUser' format is not valid"))
-            }
-        }
-    }
-
-    private fun checkConstrainsPassword() {
-        val password = this.user.aPassword
-        if (password == null) {
-            this.validationHandler().append(Error("'password' should not be null"))
-        }
-        password?.let {
-            if (!(it.contains("@") || it.contains("!") || it.contains("#"))) {
-                this.validationHandler().append(Error("'password' format is not valid"))
-            }
-            if (it.length <= MIN_LENGTH_PASSWORD || it.trim().length > NAME_MAX_LENGTH) {
-                this.validationHandler().append(Error("'password' must between 8 characters and 255 characters"))
             }
         }
     }
