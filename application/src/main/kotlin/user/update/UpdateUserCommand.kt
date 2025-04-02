@@ -6,7 +6,6 @@ data class UpdateUserCommand(
     val id: UserID,
     val name: String?,
     val email: String?,
-    val password: String?,
     val typeUser: String?,
     val isActivated: Boolean? = false
 ) {
@@ -15,11 +14,10 @@ data class UpdateUserCommand(
             anId: UserID,
             aName: String? = null,
             aEmail: String? = null,
-            aPassword: String? = null,
             aTypeUser: String? = null,
             aIsActivate: Boolean? = false
         ): UpdateUserCommand {
-            return UpdateUserCommand(anId, aName, aEmail, aPassword, aTypeUser, aIsActivate)
+            return UpdateUserCommand(anId, aName, aEmail, aTypeUser, aIsActivate)
         }
     }
 }

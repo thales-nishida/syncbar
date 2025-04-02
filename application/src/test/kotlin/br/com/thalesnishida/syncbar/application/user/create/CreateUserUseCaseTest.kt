@@ -29,11 +29,10 @@ class CreateUserUseCaseTest {
     fun givenAValidParams_whenCallCreateUser_thenReturnSuccess() {
         val expectName = "Test Test"
         val expectEmail = "test@test.com"
-        val expectPassword = "testdaaq12@"
         val expectTypeUser = "ADMIN"
         val expectActivate = true
 
-        val aCommand = CreateUserCommand.with(expectName, expectEmail, expectPassword, expectTypeUser, expectActivate)
+        val aCommand = CreateUserCommand.with(expectName, expectEmail, expectTypeUser, expectActivate)
 
         every { userGateway.create(any()) } answers { firstArg() }
 
@@ -45,7 +44,6 @@ class CreateUserUseCaseTest {
         verify(exactly = 1) {
             userGateway.create(match { aUser ->
                 expectName == aUser.aName &&
-                        expectPassword == aUser.aPassword &&
                         expectEmail == aUser.aEmail &&
                         expectTypeUser == aUser.aTypeUser &&
                         expectActivate == aUser.active
@@ -57,12 +55,11 @@ class CreateUserUseCaseTest {
     fun givenAInvalidParamsNameLess3Character_whenCallsCreateUser_thenReturnDomainException() {
         val expectName = "2"
         val expectEmail = "test@test.com"
-        val expectPassword = "testdaaq12@"
         val expectTypeUser = "ADMIN"
         val expectActivate = true
         val exceptErrorMessage = "'name' must between 3 characters and 255 characters"
 
-        val aCommand = CreateUserCommand.with(expectName, expectEmail, expectPassword, expectTypeUser, expectActivate)
+        val aCommand = CreateUserCommand.with(expectName, expectEmail, expectTypeUser, expectActivate)
 
         val notification = useCase.execute(aCommand).leftOrNull()
         Assertions.assertEquals(exceptErrorMessage, notification?.firstError()?.message)
@@ -74,7 +71,6 @@ class CreateUserUseCaseTest {
     fun givenAInvalidParamsNullName_whenCallsCreateUser_thenReturnDomainException() {
         val expectName = null
         val expectEmail = "test@test.com"
-        val expectPassword = "testdaaq12@"
         val expectTypeUser = "ADMIN"
         val expectActivate = true
         val exceptErrorMessage = "'name' should not be null"
@@ -83,7 +79,6 @@ class CreateUserUseCaseTest {
         val aCommand = CreateUserCommand.with(
             aName = expectName,
             aEmail = expectEmail,
-            aPassword = expectPassword,
             aTypeUser = expectTypeUser,
             aDeactivate = expectActivate
         )
@@ -99,12 +94,11 @@ class CreateUserUseCaseTest {
     fun givenAInvalidParamsNullEmail_whenCallsCreateUser_thenReturnDomainException() {
         val expectName = "Test Test"
         val expectEmail = null
-        val expectPassword = "testdaaq12@"
         val expectTypeUser = "ADMIN"
         val expectActivate = true
         val exceptErrorMessage = "'email' should not be null"
 
-        val aCommand = CreateUserCommand.with(expectName, expectEmail, expectPassword, expectTypeUser, expectActivate)
+        val aCommand = CreateUserCommand.with(expectName, expectEmail, expectTypeUser, expectActivate)
 
         val notification = useCase.execute(aCommand).leftOrNull()
         Assertions.assertEquals(exceptErrorMessage, notification!!.getErrors()[0].message)
@@ -112,33 +106,16 @@ class CreateUserUseCaseTest {
         verify(exactly = 0) { userGateway.create(any()) }
     }
 
-    @Test
-    fun givenAInvalidParamsNullPassword_whenCallsCreateUser_thenReturnDomainException() {
-        val expectName = "Test Test"
-        val expectEmail = "teste@test.com"
-        val expectPassword = null
-        val expectTypeUser = "ADMIN"
-        val expectActivate = true
-        val exceptErrorMessage = "'password' should not be null"
-
-        val aCommand = CreateUserCommand.with(expectName, expectEmail, expectPassword, expectTypeUser, expectActivate)
-
-        val notification = useCase.execute(aCommand).leftOrNull()
-        Assertions.assertEquals(exceptErrorMessage, notification!!.firstError()?.message)
-
-        verify(exactly = 0) { userGateway.create(any()) }
-    }
 
     @Test
     fun givenAInvalidParamsNullTypeUser_whenCallsCreateUser_thenReturnDomainException() {
         val expectName = "Test Test"
         val expectEmail = "teste@test.com"
-        val expectPassword = "aksnkdn@aksdl"
         val expectTypeUser = null
         val expectActivate = true
         val exceptErrorMessage = "'typeUser' should not be null"
 
-        val aCommand = CreateUserCommand.with(expectName, expectEmail, expectPassword, expectTypeUser, expectActivate)
+        val aCommand = CreateUserCommand.with(expectName, expectEmail, expectTypeUser, expectActivate)
 
         val notification = useCase.execute(aCommand).leftOrNull()
         Assertions.assertEquals(exceptErrorMessage, notification!!.firstError()?.message)
@@ -150,13 +127,12 @@ class CreateUserUseCaseTest {
     fun givenAInvalidParamsNameLess3Character_whenCallGetawayThrows_thenReturnAException() {
         val expectName = "Test Test"
         val expectEmail = "test@test.com"
-        val expectPassword = "testdaaq12@"
         val expectTypeUser = "ADMIN"
         val expectActivate = true
         val exceptErrorMessage = "Gateway error"
         val exceptErrorCount = 1
 
-        val aCommand = CreateUserCommand.with(expectName, expectEmail, expectPassword, expectTypeUser, expectActivate)
+        val aCommand = CreateUserCommand.with(expectName, expectEmail, expectTypeUser, expectActivate)
 
         every { userGateway.create(any()) } throws IllegalStateException(exceptErrorMessage)
 

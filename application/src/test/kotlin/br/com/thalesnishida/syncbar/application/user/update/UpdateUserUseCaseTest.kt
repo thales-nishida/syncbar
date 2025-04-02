@@ -35,7 +35,6 @@ class UpdateUserUseCaseTest {
             name = "Test2",
             email = "test2@test.com2",
             typeUser = "ADMIN",
-            password = "test2@test.com2",
             isActivate = true
         )
 
@@ -51,7 +50,6 @@ class UpdateUserUseCaseTest {
             aName = expectName,
             aEmail = expectEmail,
             aTypeUser = expectType,
-            aPassword = expectPassword,
             aIsActivate = expectActivate
         )
 
@@ -81,7 +79,6 @@ class UpdateUserUseCaseTest {
         val aUser = User.newUser(
             name = "Test",
             email = "test@test.com",
-            password = "test2@test.com",
             typeUser = "ADMIN",
             isActivate = true
         )
@@ -90,7 +87,6 @@ class UpdateUserUseCaseTest {
         val expectName = null
         val expectEmail = "test@test.com"
         val expectType = "CLIENT"
-        val exceptPassword = "tesqwqqt@das"
         val exceptErrorMessage = "'name' should not be null"
         val exceptErrorCount = 1
         val expectActivate = true
@@ -100,7 +96,6 @@ class UpdateUserUseCaseTest {
             aName = expectName,
             aEmail = expectEmail,
             aTypeUser = expectType,
-            aPassword = exceptPassword,
         )
 
         every { userGateway.findById(eq(expectId)) } returns Optional.of(aUser)
@@ -119,7 +114,6 @@ class UpdateUserUseCaseTest {
         val aUser = User.newUser(
             name = "Test",
             email = "test@test.com",
-            password = "test2@test.com",
             typeUser = "ADMIN",
             isActivate = true
         )
@@ -128,7 +122,6 @@ class UpdateUserUseCaseTest {
         val expectName = "Test 2"
         val expectEmail = "test@test.com"
         val expectType = "CLIENT"
-        val exceptPassword = "tesqwqqt@das"
         val exceptActivate = false
 
         val aCommand = UpdateUserCommand.with(
@@ -136,7 +129,6 @@ class UpdateUserUseCaseTest {
             aName = expectName,
             aEmail = expectEmail,
             aTypeUser = expectType,
-            aPassword = exceptPassword,
             aIsActivate = exceptActivate
         )
 
@@ -169,7 +161,6 @@ class UpdateUserUseCaseTest {
         val aUser = User.newUser(
             name = "Test",
             email = "test@test.com",
-            password = "test2@test.com",
             typeUser = "ADMIN",
             isActivate = true
         )
@@ -187,7 +178,6 @@ class UpdateUserUseCaseTest {
             aName = expectName,
             aEmail = expectEmail,
             aTypeUser = expectType,
-            aPassword = exceptPassword
         )
 
         every { userGateway.findById(eq(expectId)) } returns Optional.of(aUser)
@@ -207,7 +197,6 @@ class UpdateUserUseCaseTest {
         val expectName = "Test"
         val expectEmail = "test@test.com"
         val expectType = "CLIENT"
-        val exceptPassword = "tesqwqqt@das"
         val exceptErrorCount = 1
         val exceptErrorMessage = "User with ID $expectId not found"
 
@@ -216,7 +205,6 @@ class UpdateUserUseCaseTest {
             aName = expectName,
             aEmail = expectEmail,
             aTypeUser = expectType,
-            aPassword = exceptPassword
         )
 
         every { userGateway.findById(expectId) } returns Optional.empty()

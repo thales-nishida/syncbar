@@ -29,7 +29,6 @@ class DeleteUserUseCaseTest {
         val aUser = User.newUser(
             name = "Test Test",
             email = "test@test.com",
-            password = "test@asda",
             typeUser = "ADMIN",
             isActivate = true
         )
@@ -58,7 +57,6 @@ class DeleteUserUseCaseTest {
         val aUser = User.newUser(
             name = "Test Test",
             email = "test@test.com",
-            password = "test@asda",
             typeUser = "ADMIN",
             isActivate = true
         )

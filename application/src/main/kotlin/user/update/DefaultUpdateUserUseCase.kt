@@ -12,7 +12,6 @@ class DefaultUpdateUserUseCase(private val userGateway: UserGateway) : UpdateUse
         val anId = anIn.id
         val aName = anIn.name
         val aEmail = anIn.email
-        val aPassword = anIn.password
         val aTypeUser = anIn.typeUser
         val aIsActive = anIn.isActivated
 
@@ -20,7 +19,7 @@ class DefaultUpdateUserUseCase(private val userGateway: UserGateway) : UpdateUse
             .orElseThrow(Supplier { DomainException.with(validation.Error("User with ID $anId not found")) })
 
         val notification: Notification = Notification().create()
-        aUser.update(aName, aEmail, aPassword, aTypeUser, aIsActive).validate(notification)
+        aUser.update(aName, aEmail, aTypeUser, aIsActive).validate(notification)
 
         return if (notification.hasErrors()) {
             Either.Left(notification)

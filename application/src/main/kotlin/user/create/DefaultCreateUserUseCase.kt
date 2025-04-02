@@ -7,7 +7,7 @@ import validation.handler.Notification
 
 class DefaultCreateUserUseCase(private val userGateway: UserGateway) : CreateUserUseCase() {
     override fun execute(anIn: CreateUserCommand): Either<Notification, CreateUserOutput> {
-        val aUser = User.newUser(anIn.name, anIn.email, anIn.password, anIn.typeUser, anIn.deactivate)
+        val aUser = User.newUser(anIn.name, anIn.email, anIn.typeUser, anIn.deactivate)
 
         val notification = Notification().create()
         aUser.validate(notification)
