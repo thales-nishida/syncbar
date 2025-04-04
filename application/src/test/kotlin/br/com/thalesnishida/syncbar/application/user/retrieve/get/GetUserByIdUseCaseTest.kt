@@ -52,8 +52,8 @@ class GetUserByIdUseCaseTest {
 
     @Test
     fun givenAInvalidId_whenCallsGetUserById_thenShouldDomainException() {
-        val expectId = UserID.from("123")
-        val expectedErrorMessage = "User with ID $expectId not found"
+        val expectId: UserID = UserID.from("123")
+        val expectedErrorMessage = "User with ID 123 not found"
 
         every { userGateway.findById(match { it.getValue() == expectId.getValue() }) } returns Optional.empty()
         val actualException =
