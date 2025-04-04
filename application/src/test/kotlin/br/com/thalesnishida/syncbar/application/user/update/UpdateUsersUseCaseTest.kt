@@ -15,7 +15,7 @@ import user.UserGateway
 import user.UserID
 import java.util.*
 
-class UpdateUserUseCaseTest {
+class UpdateUsersUseCaseTest {
 
     @MockK
     private lateinit var userGateway: UserGateway

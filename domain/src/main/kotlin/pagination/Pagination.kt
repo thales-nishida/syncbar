@@ -6,3 +6,5 @@ data class Pagination<T>(
     val totalPages: Long,
     val items: List<T>,
 )
+
+//TODO: Create a map

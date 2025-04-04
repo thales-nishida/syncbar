@@ -8,5 +8,5 @@ interface UserGateway {
     fun deleteById(anId: UserID)
     fun findById(anId: UserID): Optional<User>
     fun update(anUpdate: User): User
-    fun fidAll(query: UserSearchQuery): Pagination<User>
+    fun findAll(query: UserSearchQuery): Pagination<User>
 }
