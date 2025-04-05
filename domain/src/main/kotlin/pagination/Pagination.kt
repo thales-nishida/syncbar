@@ -5,6 +5,9 @@ data class Pagination<T>(
     val perPage: Int,
     val totalPages: Long,
     val items: List<T>,
-)
+) {
 
-//TODO: Create a map
+    fun <R> map(mapper: (T) -> R): R {
+        val aNewList: List<R> = this.items.stream()
+    }
+}
